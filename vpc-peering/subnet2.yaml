@@ -1,0 +1,16 @@
+apiVersion: kubeovn.io/v1
+kind: Subnet
+metadata:
+  name: subnet2
+spec:
+  cidrBlock: 172.19.0.0/16
+  default: false
+  enableLb: true
+  excludeIps:
+    - 172.19.0.1
+  gateway: 172.19.0.1
+  natOutgoing: false
+  private: false
+  protocol: IPv4
+  provider: vswitch2.default.ovn
+  vpc: vpc2

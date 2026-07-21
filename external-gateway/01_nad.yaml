@@ -1,0 +1,25 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  labels:
+    network.harvesterhci.io/ready: "true"
+    network.harvesterhci.io/type: OverlayNetwork
+  name: vswitchinternal
+  namespace: default
+spec:
+  config: '{"cniVersion":"0.3.1","name":"vswitchinternal","type":"kube-ovn","server_socket":
+    "/run/openvswitch/kube-ovn-daemon.sock", "provider": "vswitchinternal.default.ovn"}'
+
+---
+
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  labels:
+    network.harvesterhci.io/ready: "true"
+    network.harvesterhci.io/type: OverlayNetwork
+  name: vswitchexternal
+  namespace: kube-system
+spec:
+  config: '{"cniVersion":"0.3.1","name":"vswitchexternal","master": "ens19","type":"kube-ovn","server_socket":
+    "/run/openvswitch/kube-ovn-daemon.sock", "provider": "vswitchexternal.kube-system.ovn"}'

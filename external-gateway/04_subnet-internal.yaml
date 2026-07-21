@@ -1,0 +1,18 @@
+apiVersion: kubeovn.io/v1
+kind: Subnet
+metadata:
+  name: subnetinternal
+spec:
+  cidrBlock: 172.20.10.0/24
+  default: false
+  enableLb: true
+  excludeIps:
+  - 172.20.10.1
+  gateway: 172.20.10.1
+  gatewayNode: ""
+  natOutgoing: true
+  private: false
+  protocol: IPv4
+  provider: vswitchinternal.default.ovn
+  vpc: nat-vpc
+

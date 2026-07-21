@@ -1,0 +1,9 @@
+apiVersion: kubeovn.io/v1
+kind: IptablesEIP
+metadata:
+  name: dnat-eip
+spec:
+  natGwDp: gw1
+  externalSubnet: subnetexternal
+  v4ip: 10.0.59.11 # Selects static IP from allowed pool
+
