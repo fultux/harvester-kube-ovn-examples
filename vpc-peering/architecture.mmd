@@ -1,0 +1,41 @@
+%%{init: { 'theme': 'base', 'themeVariables': { 'fontFamily': 'SUSE, sans-serif' } } }%%
+flowchart TD
+    classDef pine fill:#0c322c,stroke:#0c322c,color:#ffffff,stroke-width:2px,font-family:'SUSE';
+    classDef jungle fill:#30ba78,stroke:#30ba78,color:#0c322c,stroke-width:2px,font-family:'SUSE';
+    classDef mint fill:#90ebcd,stroke:#0c322c,color:#0c322c,stroke-width:1px,font-family:'SUSE';
+    classDef fog fill:#efefef,stroke:#90ebcd,color:#0c322c,stroke-dasharray: 5 5,font-family:'SUSE';
+
+    subgraph VPC1_Cluster ["VPC: vpc1"]
+        net1[Subnet: subnet1\n172.17.0.0/16]:::pine
+        nad1[NAD: vswitch1]:::mint
+        
+        peer1[Local IP: 169.254.0.1/30]:::jungle
+        peerNat[Local IP: 169.254.0.5/30]:::jungle
+    end
+
+    subgraph VPC2_Cluster ["VPC: vpc2"]
+        net2[Subnet: subnet2\n172.19.0.0/16]:::pine
+        nad2[NAD: vswitch2]:::mint
+        
+        peer2[Local IP: 169.254.0.2/30]:::jungle
+    end
+
+    subgraph External_Cluster ["VPC: nat-vpc (External Gateway)"]
+        peerExt[Remote IP: 169.254.0.6/30]:::jungle
+        netNat[Subnets: 172.20.10.0/24\n172.21.0.0/16]:::pine
+    end
+
+    %% Networking Attachments
+    net1 -. provider .-> nad1
+    net2 -. provider .-> nad2
+
+    %% Peerings
+    peer1 <-->|VpcPeering| peer2
+    peerNat <-->|VpcPeering| peerExt
+
+    %% Static Routes
+    net1 -->|Route: 172.19.0.0/16| peer1
+    net2 -->|Route: 172.17.0.0/16| peer2
+    net1 -->|Route: 172.20.10.0/24| peerNat
+    
+    class VPC1_Cluster,VPC2_Cluster,External_Cluster fog;

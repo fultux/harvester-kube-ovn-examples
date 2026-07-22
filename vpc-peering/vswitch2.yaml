@@ -5,7 +5,7 @@ metadata:
     network.harvesterhci.io/clusternetwork: mgmt
     network.harvesterhci.io/ready: 'true'
     network.harvesterhci.io/type: OverlayNetwork
- name: vswitch2
+  name: vswitch2
   namespace: default
 spec:
   config: >-
