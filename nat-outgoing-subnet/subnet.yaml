@@ -1,0 +1,20 @@
+apiVersion: kubeovn.io/v1
+kind: Subnet
+metadata:
+  name: out-subnet
+spec:
+  cidrBlock: 172.18.0.0/16
+  default: false
+  dhcpV4Options: dns_server=1.1.1.1
+  enableDHCP: true
+  enableLb: true
+  excludeIps:
+    - 172.18.0.1
+  gateway: 172.18.0.1
+  gatewayNode: ''
+  gatewayType: distributed
+  natOutgoing: true
+  private: false
+  protocol: IPv4
+  provider: external-default.default.ovn
+  vpc: ovn-cluster

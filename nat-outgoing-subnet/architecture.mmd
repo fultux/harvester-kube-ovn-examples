@@ -1,0 +1,21 @@
+%%{init: { 'theme': 'base', 'themeVariables': { 'fontFamily': 'SUSE, sans-serif' } } }%%
+flowchart TD
+    classDef pine fill:#0c322c,stroke:#0c322c,color:#ffffff,stroke-width:2px,font-family:'SUSE';
+    classDef jungle fill:#30ba78,stroke:#30ba78,color:#0c322c,stroke-width:2px,font-family:'SUSE';
+    classDef mint fill:#90ebcd,stroke:#0c322c,color:#0c322c,stroke-width:1px,font-family:'SUSE';
+    classDef fog fill:#efefef,stroke:#90ebcd,color:#0c322c,stroke-dasharray: 5 5,font-family:'SUSE';
+
+    subgraph Cluster_VPC ["VPC: ovn-cluster (Default)"]
+        net1[Subnet: out-subnet\n172.18.0.0/16]:::pine
+        nad1[NAD: external-default]:::mint
+        nat[NAT Outgoing\nEnabled]:::jungle
+    end
+    
+    internet((Internet / External Network)):::fog
+
+    %% Networking Attachments
+    net1 -. provider .-> nad1
+    net1 --- nat
+    nat --->|Outbound Traffic| internet
+
+    class Cluster_VPC fog;
