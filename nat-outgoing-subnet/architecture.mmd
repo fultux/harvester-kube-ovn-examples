@@ -1,9 +1,28 @@
-%%{init: { 'theme': 'base', 'themeVariables': { 'fontFamily': 'SUSE, sans-serif' } } }%%
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontFamily': 'SUSE, sans-serif',
+    'fontSize': '14px',
+    'primaryColor': '#30ba78',
+    'primaryTextColor': '#0c322c',
+    'primaryBorderColor': '#30ba78',
+    'lineColor': '#0c322c',
+    'secondaryColor': '#0c322c',
+    'tertiaryColor': '#90ebcd',
+    'mainBkg': '#ffffff',
+    'nodeBorder': '#0c322c',
+    'clusterBkg': '#efefef',
+    'clusterBorder': '#90ebcd',
+    'titleColor': '#0c322c',
+    'edgeLabelBackground':'#ffffff'
+  }
+} }%%
 flowchart TD
-    classDef pine fill:#0c322c,stroke:#0c322c,color:#ffffff,stroke-width:2px,font-family:'SUSE';
-    classDef jungle fill:#30ba78,stroke:#30ba78,color:#0c322c,stroke-width:2px,font-family:'SUSE';
-    classDef mint fill:#90ebcd,stroke:#0c322c,color:#0c322c,stroke-width:1px,font-family:'SUSE';
-    classDef fog fill:#efefef,stroke:#90ebcd,color:#0c322c,stroke-dasharray: 5 5,font-family:'SUSE';
+    classDef pine fill:#0c322c,stroke:#0c322c,color:#ffffff,stroke-width:2px;
+    classDef jungle fill:#30ba78,stroke:#30ba78,color:#0c322c,stroke-width:2px;
+    classDef mint fill:#90ebcd,stroke:#0c322c,color:#0c322c,stroke-width:1px;
+    classDef fog fill:#efefef,stroke:#90ebcd,color:#0c322c,stroke-dasharray: 5 5;
+    classDef orange fill:#fe7c3f,stroke:#fe7c3f,color:#0c322c,stroke-width:2px;
 
     subgraph Cluster_VPC ["VPC: ovn-cluster (Default)"]
         net1[Subnet: out-subnet\n172.18.0.0/16]:::pine
