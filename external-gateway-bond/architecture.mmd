@@ -1,0 +1,87 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'fontFamily': 'SUSE, sans-serif',
+    'fontSize': '14px',
+    'primaryColor': '#30ba78',
+    'primaryTextColor': '#0c322c',
+    'primaryBorderColor': '#30ba78',
+    'lineColor': '#0c322c',
+    'secondaryColor': '#0c322c',
+    'tertiaryColor': '#90ebcd',
+    'mainBkg': '#ffffff',
+    'nodeBorder': '#0c322c',
+    'clusterBkg': '#efefef',
+    'clusterBorder': '#90ebcd',
+    'titleColor': '#0c322c',
+    'edgeLabelBackground':'#ffffff'
+  }
+} }%%
+flowchart TD
+    %% SUSE Brand Classes
+    classDef pine fill:#0c322c,stroke:#0c322c,color:#ffffff,stroke-width:2px;
+    classDef jungle fill:#30ba78,stroke:#30ba78,color:#0c322c,stroke-width:2px;
+    classDef mint fill:#90ebcd,stroke:#0c322c,color:#0c322c,stroke-width:1px;
+    classDef fog fill:#efefef,stroke:#90ebcd,color:#0c322c,stroke-dasharray: 5 5;
+    classDef orange fill:#fe7c3f,stroke:#fe7c3f,color:#0c322c,stroke-width:2px;
+
+    %% Subgraphs for Logical Grouping
+    subgraph KubeOVN_VPC ["VPC: nat-vpc"]
+        gw1[VpcNatGateway: gw1\nLAN: 172.20.10.254]:::pine
+        
+        subgraph SubnetInternal [Internal Network]
+            netInt[Subnet: subnetinternal\n172.20.10.0/24]:::pine
+            nadInt[NAD: vswitchinternal]:::mint
+        end
+
+        subgraph SubnetExternal [External Network]
+            netExt[Subnet: subnetexternal\n10.0.0.0/16]:::pine
+            nadExt[NAD: vswitchexternal]:::mint
+        end
+    end
+
+    %% External Provider mapping
+    subgraph Underlay [Physical / Underlay]
+        vlanExt[Vlan: vlan-external\nID: 0]:::mint
+        pnExt[ProviderNetwork: pn-external]:::mint
+        extBondBr([Bond Bridge: ext-bond-br]):::mint
+        ens19([Interface: ens19]):::mint
+        ens20([Interface: ens20]):::mint
+    end
+
+    %% SNAT & DNAT Rules
+    subgraph EIPs [Elastic IPs & NAT Rules]
+        eipSnat[IptablesEIP: my-eip\nIP: 10.0.59.10]:::jungle
+        ruleSnat[IptablesSnatRule: my-snat\nSource: 172.20.10.0/24]:::jungle
+
+        eipDnat[IptablesEIP: dnat-eip\nIP: 10.0.59.11]:::jungle
+        ruleDnat80[IptablesDnatRule: dnat-80\n10.0.59.11:8080 -> 172.20.10.10:80]:::jungle
+        ruleDnat22[IptablesDnatRule: dnat-22\n10.0.59.11:22 -> 172.20.10.10:22]:::jungle
+    end
+
+    %% Relationships
+    %% Networking
+    netInt -. provider .-> nadInt
+    netExt -. provider .-> nadExt
+    netExt -- uses --> vlanExt
+    vlanExt -- backed by --> pnExt
+    pnExt -- binds to --> extBondBr
+    extBondBr -- physical port --> ens19
+    extBondBr -- physical port --> ens20
+
+    %% Gateway
+    gw1 -- local subnet --> netInt
+    gw1 -- external subnets --> netExt
+
+    %% EIP / SNAT / DNAT
+    eipSnat -- allocated on --> gw1
+    eipSnat -- draws IP from --> netExt
+    ruleSnat -- uses --> eipSnat
+
+    eipDnat -- allocated on --> gw1
+    eipDnat -- draws IP from --> netExt
+    ruleDnat80 -- uses --> eipDnat
+    ruleDnat22 -- uses --> eipDnat
+
+    %% Apply Fog class to all Subgraphs
+    class KubeOVN_VPC,SubnetInternal,SubnetExternal,Underlay,EIPs fog;
