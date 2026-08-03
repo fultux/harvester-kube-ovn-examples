@@ -1,0 +1,15 @@
+apiVersion: kubeovn.io/v1
+kind: ProviderNetwork
+metadata:
+  name: pn-external
+spec:
+  defaultInterface: ext-bond-br
+---
+apiVersion: kubeovn.io/v1
+kind: Vlan
+metadata:
+  name: vlan-external
+spec:
+  id: 0
+  provider: pn-external
+

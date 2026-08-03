@@ -1,0 +1,21 @@
+apiVersion: kubeovn.io/v1
+kind: IptablesDnatRule
+metadata:
+  name: dnat-80
+spec:
+  eip: dnat-eip
+  externalPort: '8080'
+  internalIp: 172.20.10.10
+  internalPort: '80'
+  protocol: tcp
+---
+apiVersion: kubeovn.io/v1
+kind: IptablesDnatRule
+metadata:
+  name: dnat-22
+spec:
+  eip: dnat-eip
+  externalPort: '22'
+  internalIp: 172.20.10.10
+  internalPort: '22'
+  protocol: tcp

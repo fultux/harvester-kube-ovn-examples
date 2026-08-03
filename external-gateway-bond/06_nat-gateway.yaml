@@ -1,0 +1,11 @@
+kind: VpcNatGateway
+apiVersion: kubeovn.io/v1
+metadata:
+  name: gw1
+spec:
+  vpc: nat-vpc
+  subnet: subnetinternal
+  lanIp: 172.20.10.254 
+  externalSubnets:
+    - subnetexternal
+
